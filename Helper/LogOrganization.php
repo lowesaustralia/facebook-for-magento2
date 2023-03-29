@@ -16,7 +16,7 @@ class LogOrganization
     static $criticalLines = array();
 
     public static function organizeLogs() {
-        $arrayOfFiles = array("var/log/debug.log", "var/log/cron.log", "var/log/magento.cron.log", "var/log/system.log");
+        $arrayOfFiles = array("../../../../var/log/debug.log", "../../../../var/log/cron.log", "../../../../var/log/magento.cron.log", "../../../../var/log/system.log");
         $countCrit = 0;
 
         foreach($arrayOfFiles as $value) {
@@ -74,7 +74,7 @@ class LogOrganization
             fclose($fp);
         }
 
-        $amuLogs = self::tailCustom("var/log/facebook-business-extension.log", 100);
+        $amuLogs = self::tailCustom("../../../../var/log/facebook-business-extension.log", 100);
         $amuLogsArr = explode("\n", $amuLogs);
         self::$criticalLines = array_merge(self::$criticalLines, $amuLogsArr);
 
