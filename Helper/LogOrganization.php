@@ -89,32 +89,37 @@ class LogOrganization
     }
 
     public static function tailCustom($filepath, $lines) {
-        $f = fopen($filepath, "rb");
-        if ($f === false) {
-            return false;
+        try{
+            $f = fopen($filepath, "rb");
+            if ($f === false) {
+                return false;
+            }
+
+            fseek($f, -1, SEEK_END);
+            if (fread($f, 1) != "\n") {
+                $lines -= 1;
+            }
+
+            $output = '';
+            $chunk = '';
+
+            while (ftell($f) > 0 && $lines >=   0) {
+                $seek = min(ftell($f), self::BUFFER);
+                fseek($f, -$seek, SEEK_CUR);
+                $output = ($chunk = fread($f, $seek)) . $output;
+                fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
+                $lines -= substr_count($chunk, "\n");
+            }
+
+            while ($lines++ < 0) {
+                $output = substr($output, strpos($output, "\n") + 1);
+            }
+
+            fclose($f);
+            return trim($output);
+        }catch (\Exception $e){
+
         }
-
-        fseek($f, -1, SEEK_END);
-        if (fread($f, 1) != "\n") {
-            $lines -= 1;
-        }
-
-        $output = '';
-        $chunk = '';
-
-        while (ftell($f) > 0 && $lines >=   0) {
-            $seek = min(ftell($f), self::BUFFER);
-            fseek($f, -$seek, SEEK_CUR);
-            $output = ($chunk = fread($f, $seek)) . $output;
-            fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
-            $lines -= substr_count($chunk, "\n");
-        }
-
-        while ($lines++ < 0) {
-            $output = substr($output, strpos($output, "\n") + 1);
-        }
-
-        fclose($f);
-        return trim($output);
+        return false;
     }
 }
