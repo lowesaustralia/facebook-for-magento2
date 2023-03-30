@@ -214,7 +214,7 @@ class Builder
      */
     protected function trimAttribute($attrName, $attrValue)
     {
-        $attrValue = trim($attrValue);
+        $attrValue = trim((string)$attrValue);
         // Facebook Product attributes
         // ref: https://developers.facebook.com/docs/commerce-platform/catalog/fields
         switch ($attrName) {
